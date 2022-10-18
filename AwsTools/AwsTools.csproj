@@ -6,4 +6,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.KinesisFirehose" Version="3.7.2.144" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.9.69" />
+    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.7.4.22" />
+    <PackageReference Include="AWSSDK.SQS" Version="3.7.2.119" />
+  </ItemGroup>
+
 </Project>
