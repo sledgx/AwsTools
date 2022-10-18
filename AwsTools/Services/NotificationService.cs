@@ -17,19 +17,25 @@ namespace AwsTools.Services
             client = new AmazonSimpleNotificationServiceClient(setting.GetCredentials(), setting.GetRegionEndpoint());
         }
 
-        public bool PushMessage<T>(T message)
+        public bool PushMessage(string message)
         {
             var request = new PublishRequest
             {
                 TopicArn = topicName,
-                Message = JsonSerializer.Serialize(message)
+                Message = message
             };
 
             var response = client.PublishAsync(request).Result;
             return response.HttpStatusCode == HttpStatusCode.OK;
         }
 
-        public bool PushMessages<T>(List<T> messages, int chunkSize = 500)
+        public bool PushObject<T>(T data)
+        {
+            string json = JsonSerializer.Serialize(data);
+            return PushMessage(json);
+        }
+
+        public bool PushMessages(List<string> messages, int chunkSize = 500)
         {
             var result = new List<HttpStatusCode>();
             foreach (var chunk in messages.Chunk(chunkSize))
@@ -38,11 +44,11 @@ namespace AwsTools.Services
                 {
                     TopicArn = topicName,
                     PublishBatchRequestEntries = messages
-                    .Select(x => new PublishBatchRequestEntry
-                    {
-                        Message = JsonSerializer.Serialize(x)
-                    })
-                    .ToList()
+                        .Select(x => new PublishBatchRequestEntry
+                        {
+                            Message = x
+                        })
+                        .ToList()
                 };
 
                 var response = client.PublishBatchAsync(request).Result;
@@ -50,6 +56,15 @@ namespace AwsTools.Services
             }
 
             return result.All(x => x == HttpStatusCode.OK);
+        }
+
+        public bool PushObjects<T>(List<T> data, int chunkSize = 500)
+        {
+            var messages = data
+                .Select(x => JsonSerializer.Serialize(x))
+                .ToList();
+
+            return PushMessages(messages, chunkSize);
         }
     }
 }
