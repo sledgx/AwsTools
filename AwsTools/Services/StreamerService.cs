@@ -18,19 +18,19 @@ namespace AwsTools.Services
             client = new AmazonKinesisFirehoseClient(setting.GetCredentials(), setting.GetRegionEndpoint());
         }
 
-        public bool PutRecord<T>(T record)
+        public bool PutRecord<T>(T record, string encoder = "UTF-8")
         {
             var request = new PutRecordRequest
             {
                 DeliveryStreamName = streamName,
-                Record = BuildRecord(record)
+                Record = BuildRecord(record, encoder)
             };
 
             var response = client.PutRecordAsync(request).Result;
             return response.HttpStatusCode == HttpStatusCode.OK;
         }
 
-        public bool PutRecords<T>(List<T> records, int chunkSize = 500)
+        public bool PutRecords<T>(List<T> records, string encoder = "UTF-8", int chunkSize = 500)
         {
             var result = new List<HttpStatusCode>();
             foreach (var chunk in records.Chunk(chunkSize))
@@ -39,7 +39,7 @@ namespace AwsTools.Services
                 {
                     DeliveryStreamName = streamName,
                     Records = chunk.
-                        Select(x => BuildRecord(x))
+                        Select(x => BuildRecord(x, encoder))
                         .ToList()
                 };
 
@@ -50,10 +50,11 @@ namespace AwsTools.Services
             return result.All(x => x == HttpStatusCode.OK);
         }
 
-        private static Record BuildRecord<T>(T record)
+        private static Record BuildRecord<T>(T record, string encoder = "UTF-8")
         {
             string json = JsonSerializer.Serialize(record);
-            byte[] bytes = Encoding.UTF8.GetBytes(json);
+            var encoding = Encoding.GetEncoding(encoder);
+            byte[] bytes = encoding.GetBytes(json);
 
             using var stream = new MemoryStream(bytes);
             return new Record
