@@ -27,12 +27,12 @@ namespace AwsTools.Services
             };
 
             var response = client.PutRecordAsync(request).Result;
-            return response?.HttpStatusCode == HttpStatusCode.OK;
+            return response.HttpStatusCode == HttpStatusCode.OK;
         }
 
         public bool PutRecords<T>(List<T> records, int chunkSize = 500)
         {
-            var result = new List<HttpStatusCode?>();
+            var result = new List<HttpStatusCode>();
             foreach (var chunk in records.Chunk(chunkSize))
             {
                 var request = new PutRecordBatchRequest
@@ -44,7 +44,7 @@ namespace AwsTools.Services
                 };
 
                 var response = client.PutRecordBatchAsync(request).Result;
-                result.Add(response?.HttpStatusCode);
+                result.Add(response.HttpStatusCode);
             }
 
             return result.All(x => x == HttpStatusCode.OK);
