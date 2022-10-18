@@ -2,8 +2,16 @@
 
 namespace AwsTools.Extensions
 {
+    /// <summary>
+    /// Byte object extensions
+    /// </summary>
     internal static class ByteExtensions
     {
+        /// <summary>
+        /// Decompresses an array of bytes
+        /// </summary>
+        /// <param name="bytes">The byte array to decompress.</param>
+        /// <returns>The decompressed byte array.</returns>
         public static byte[] FromZip(this byte[] bytes)
         {
             using var msi = new MemoryStream(bytes);
@@ -16,6 +24,11 @@ namespace AwsTools.Extensions
             return mso.ToArray();
         }
 
+        /// <summary>
+        /// Compresses an array of bytes
+        /// </summary>
+        /// <param name="bytes">The byte array to compress.</param>
+        /// <returns>The compressed byte array.</returns>
         public static byte[] ToZip(this byte[] bytes)
         {
             using var msi = new MemoryStream(bytes);
