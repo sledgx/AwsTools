@@ -11,7 +11,7 @@ namespace AwsTools.Services
     /// </summary>
     public class QueueService
     {
-        private readonly string queueName;
+        private readonly string queueUrl;
         private readonly AmazonSQSClient client;
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace AwsTools.Services
         /// <param name="setting">Queue service setting.</param>
         public QueueService(QueueSetting setting)
         {
-            queueName = setting.QueueName;
+            queueUrl = setting.QueueUrl;
             client = new AmazonSQSClient(setting.GetCredentials(), setting.GetRegionEndpoint());
         }
 
@@ -32,7 +32,7 @@ namespace AwsTools.Services
         {
             var request = new GetQueueAttributesRequest
             {
-                QueueUrl = queueName,
+                QueueUrl = queueUrl,
                 AttributeNames = new List<string>
                 {
                     "ApproximateNumberOfMessages"
@@ -52,7 +52,7 @@ namespace AwsTools.Services
         {
             var request = new SendMessageRequest
             {
-                QueueUrl = queueName,
+                QueueUrl = queueUrl,
                 MessageBody = message
             };
 
@@ -85,7 +85,7 @@ namespace AwsTools.Services
             {
                 var request = new SendMessageBatchRequest
                 {
-                    QueueUrl = queueName,
+                    QueueUrl = queueUrl,
                     Entries = messages
                         .Select(x => new SendMessageBatchRequestEntry
                         {
@@ -125,7 +125,7 @@ namespace AwsTools.Services
         {
             var request = new ReceiveMessageRequest
             {
-                QueueUrl = queueName,
+                QueueUrl = queueUrl,
                 WaitTimeSeconds = 1,
                 MaxNumberOfMessages = 1
             };
@@ -147,7 +147,7 @@ namespace AwsTools.Services
         {
             var request = new DeleteMessageRequest
             {
-                QueueUrl = queueName,
+                QueueUrl = queueUrl,
                 ReceiptHandle = id
             };
 

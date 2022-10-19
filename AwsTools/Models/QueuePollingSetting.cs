@@ -35,8 +35,8 @@
         /// </summary>
         /// <param name="credentials">The AWS Account Credentials.</param>
         /// <param name="region">The AWS service region.</param>
-        /// <param name="queueName">The SQS queue name.</param>
-        public QueuePollingSetting(AwsCredentials credentials, string region, string queueName)
-            : base(credentials, region, queueName) { }
+        /// <param name="queueUrl">The SQS queue url.</param>
+        public QueuePollingSetting(AwsCredentials credentials, string region, string queueUrl)
+            : base(credentials, region, queueUrl) { }
     }
 }
