@@ -1,7 +1,7 @@
 ﻿using Amazon;
 using Amazon.Runtime;
 
-namespace AwsTools.Models
+namespace SledGX.Tools.AWS.Models
 {
     /// <summary>
     /// Service Base Setting.

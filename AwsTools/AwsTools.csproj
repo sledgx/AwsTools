@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AssemblyName>SledGX.Tools.AWS</AssemblyName>
     <Title>AWS Services Wrapper for .NET</Title>
     <Authors>SledGX</Authors>
     <Description>Simple .NET wrapper for AWS SNS, SQS, S3 and Kinesis services</Description>

@@ -1,10 +1,10 @@
 ﻿using Amazon.SQS;
 using Amazon.SQS.Model;
-using AwsTools.Models;
+using SledGX.Tools.AWS.Models;
 using System.Net;
 using System.Text.Json;
 
-namespace AwsTools.Services
+namespace SledGX.Tools.AWS
 {
     /// <summary>
     /// Wrapper for accessing Amazon Simple Queue Service (SQS).

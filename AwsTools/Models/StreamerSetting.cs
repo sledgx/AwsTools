@@ -1,4 +1,4 @@
-﻿namespace AwsTools.Models
+﻿namespace SledGX.Tools.AWS.Models
 {
     /// <summary>
     /// Amazon Kinesis Data Firehose Setting.

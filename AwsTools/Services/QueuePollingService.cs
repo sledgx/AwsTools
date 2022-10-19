@@ -1,7 +1,7 @@
-﻿using AwsTools.Models;
+﻿using SledGX.Tools.AWS.Models;
 using System.Text.Json;
 
-namespace AwsTools.Services
+namespace SledGX.Tools.AWS
 {
     /// <summary>
     /// Wrapper for listening to an Amazon Simple Queue Service (SQS) queue.

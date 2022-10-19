@@ -1,4 +1,4 @@
-﻿namespace AwsTools.Models
+﻿namespace SledGX.Tools.AWS.Models
 {
     /// <summary>
     /// AWS Account Credentials Setting.

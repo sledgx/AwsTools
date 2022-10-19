@@ -1,4 +1,4 @@
-# AwsTools
+# SledGX AWS Tools
 AWS Services Wrapper for .NET
 
 - [Notification](#notification-service): implementation of the Amazon Simple Notification Service (SNS) API.

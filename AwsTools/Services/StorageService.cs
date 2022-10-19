@@ -1,11 +1,11 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
-using AwsTools.Extensions;
-using AwsTools.Models;
+using SledGX.Tools.AWS.Extensions;
+using SledGX.Tools.AWS.Models;
 using System.Net;
 using System.Text.Json;
 
-namespace AwsTools.Services
+namespace SledGX.Tools.AWS
 {
     /// <summary>
     /// Storage compression format

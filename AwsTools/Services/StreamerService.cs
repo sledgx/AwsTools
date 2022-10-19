@@ -1,11 +1,11 @@
 ﻿using Amazon.KinesisFirehose;
 using Amazon.KinesisFirehose.Model;
-using AwsTools.Models;
+using SledGX.Tools.AWS.Models;
 using System.Net;
 using System.Text;
 using System.Text.Json;
 
-namespace AwsTools.Services
+namespace SledGX.Tools.AWS
 {
     /// <summary>
     /// Wrapper for accessing Amazon Kinesis Data Firehose.

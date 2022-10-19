@@ -1,6 +1,6 @@
 ﻿using System.IO.Compression;
 
-namespace AwsTools.Extensions
+namespace SledGX.Tools.AWS.Extensions
 {
     /// <summary>
     /// Byte object extensions

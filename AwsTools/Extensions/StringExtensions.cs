@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace AwsTools.Extensions
+namespace SledGX.Tools.AWS.Extensions
 {
     /// <summary>
     /// String object extensions
