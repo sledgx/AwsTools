@@ -213,7 +213,7 @@ namespace AwsTools.Services
         /// </summary>
         /// <param name="key">The path of the object to deleted.</param>
         /// <returns>True if the operation is successful, false otherwise.</returns>
-        public bool Delete(string key)
+        public bool DeleteObject(string key)
         {
             var request = new DeleteObjectRequest
             {

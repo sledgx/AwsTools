@@ -1,16 +1,42 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Title>AWS Services Wrapper for .NET</Title>
+    <Authors>SledGX</Authors>
+    <Description>Simple .NET wrapper for AWS SNS, SQS, S3 and Kinesis services</Description>
+    <Copyright>Copyright (c) 2022 SledGX</Copyright>
+    <PackageProjectUrl>https://github.com/sledgx/AwsTools</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/sledgx/AwsTools</RepositoryUrl>
+    <PackageTags>aws;amazon;sdk;sns;sqs;s3;kinesis</PackageTags>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.KinesisFirehose" Version="3.7.2.144" />
-    <PackageReference Include="AWSSDK.S3" Version="3.7.9.69" />
-    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.7.4.22" />
-    <PackageReference Include="AWSSDK.SQS" Version="3.7.2.119" />
+    <None Include="..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.KinesisFirehose" Version="3.7.2.145" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.9.70" />
+    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.7.4.23" />
+    <PackageReference Include="AWSSDK.SQS" Version="3.7.2.120" />
   </ItemGroup>
 
 </Project>
