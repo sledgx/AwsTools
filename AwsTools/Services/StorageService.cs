@@ -3,6 +3,7 @@ using Amazon.S3.Model;
 using SledGX.Tools.AWS.Extensions;
 using SledGX.Tools.AWS.Models;
 using System.Net;
+using System.Text;
 using System.Text.Json;
 
 namespace SledGX.Tools.AWS
@@ -12,9 +13,30 @@ namespace SledGX.Tools.AWS
     /// </summary>
     public enum StorageFormat
     {
+        /// <summary>
+        /// Storing objects as a plain text string.
+        /// </summary>
         PLAIN,
+        /// <summary>
+        /// Storing objects as a Base64 string.
+        /// </summary>
+        BASE64,
+        /// <summary>
+        /// Storing objects as zipped data.
+        /// </summary>
         GZIP,
-        AUTO
+        /// <summary>
+        /// Storing objects as a Base64 zipped string.
+        /// </summary>
+        GZIP_BASE64,
+        /// <summary>
+        /// Storing objects as deflated data.
+        /// </summary>
+        DEFLATE,
+        /// <summary>
+        /// Storing objects as a Base64 deflated data.
+        /// </summary>
+        DEFLATE_BASE64
     }
 
     /// <summary>
@@ -72,25 +94,30 @@ namespace SledGX.Tools.AWS
         /// </summary>
         /// <param name="key">The path to the object.</param>
         /// <param name="text">The text to load.</param>
-        /// <param name="format">The format of the content encoding; PLAIN for plain text, GZIP for compressed text or AUTO for automatic choice between the previous two.</param>
+        /// <param name="format">The format of the content encoding.</param>
         /// <param name="encoder">The encoding of the content.</param>
         /// <returns>True if the operation is successful, false otherwise.</returns>
         public bool UploadText(string key, string text, StorageFormat format = StorageFormat.PLAIN, string encoder = "UTF-8")
         {
-            string data = text;
-            if (format == StorageFormat.GZIP || format == StorageFormat.AUTO)
-            {
-                data = text.ToZippedBase64(encoder);
+            var encoding = Encoding.GetEncoding(encoder);
+            byte[] bytes = encoding.GetBytes(text);
 
-                if (format == StorageFormat.AUTO && data.Length > text.Length)
-                    data = text;
+            if (format == StorageFormat.GZIP || format == StorageFormat.GZIP_BASE64)
+                bytes = bytes.Zip();
+            else if (format == StorageFormat.DEFLATE || format == StorageFormat.DEFLATE_BASE64)
+                bytes = bytes.Deflate();
+
+            if (format == StorageFormat.BASE64 || format == StorageFormat.GZIP_BASE64 || format == StorageFormat.DEFLATE_BASE64)
+            {
+                var base64 = Convert.ToBase64String(bytes);
+                bytes = encoding.GetBytes(base64);
             }
 
             var request = new PutObjectRequest
             {
                 BucketName = bucketName,
                 Key = key,
-                ContentBody = data
+                InputStream = new MemoryStream(bytes)
             };
 
             var response = client.PutObjectAsync(request).Result;
@@ -103,7 +130,7 @@ namespace SledGX.Tools.AWS
         /// <typeparam name="T">The generic type of the object.</typeparam>
         /// <param name="key">The path to the object.</param>
         /// <param name="data">The object to load.</param>
-        /// <param name="format">The format of the content encoding; PLAIN for plain text, GZIP for compressed text or AUTO for automatic choice between the previous two.</param>
+        /// <param name="format">The format of the content encoding.</param>
         /// <param name="encoder">The encoding of the content.</param>
         /// <returns>True if the operation is successful, false otherwise.</returns>
         public bool UploadObject<T>(string key, T data, StorageFormat format = StorageFormat.PLAIN, string encoder = "UTF-8")
@@ -135,10 +162,10 @@ namespace SledGX.Tools.AWS
         /// Retrieves a text from Amazon S3 bucket.
         /// </summary>
         /// <param name="key">The path to the object.</param>
-        /// <param name="tryUnzip">Tries to automatically decompress the contents of the object.</param>
+        /// <param name="format">The format of the content encoding.</param>
         /// <param name="encoder">The encoding of the content.</param>
         /// <returns>The downloaded text.</returns>
-        public string? GetText(string key, bool tryUnzip = false, string encoder = "UTF-8")
+        public string? GetText(string key, StorageFormat format = StorageFormat.PLAIN, string encoder = "UTF-8")
         {
             var request = new GetObjectRequest
             {
@@ -151,16 +178,27 @@ namespace SledGX.Tools.AWS
             if (response.HttpStatusCode != HttpStatusCode.OK)
                 return null;
 
-            using var reader = new StreamReader(response.ResponseStream);
-            var text = reader.ReadToEnd();
-
-            if (tryUnzip)
+            byte[] bytes;
+            using (var stream = new MemoryStream())
             {
-                try { text = text.FromZippedBase64(encoder); }
-                catch { }
+                response.ResponseStream.CopyTo(stream);
+                bytes = stream.ToArray();
             }
 
-            return text;
+            var encoding = Encoding.GetEncoding(encoder);
+
+            if (format == StorageFormat.BASE64 || format == StorageFormat.GZIP_BASE64 || format == StorageFormat.DEFLATE_BASE64)
+            {
+                var base64 = encoding.GetString(bytes);
+                bytes = Convert.FromBase64String(base64);
+            }
+
+            if (format == StorageFormat.GZIP || format == StorageFormat.GZIP_BASE64)
+                bytes = bytes.Unzip();
+            else if (format == StorageFormat.DEFLATE || format == StorageFormat.DEFLATE_BASE64)
+                bytes = bytes.Flate();
+
+            return encoding.GetString(bytes);
         }
 
         /// <summary>
@@ -168,12 +206,12 @@ namespace SledGX.Tools.AWS
         /// </summary>
         /// <typeparam name="T">The generic type of the object.</typeparam>
         /// <param name="key">The path to the object.</param>
-        /// <param name="tryUnzip">Tries to automatically decompress the contents of the object.</param>
+        /// <param name="format">The format of the content encoding.</param>
         /// <param name="encoder">The encoding of the content.</param>
         /// <returns>The downloaded object.</returns>
-        public T? GetObject<T>(string key, bool tryUnzip = false, string encoder = "UTF-8")
+        public T? GetObject<T>(string key, StorageFormat format = StorageFormat.PLAIN, string encoder = "UTF-8")
         {
-            var json = GetText(key, tryUnzip, encoder);
+            var json = GetText(key, format, encoder);
 
             if (string.IsNullOrEmpty(json))
                 return default;
