@@ -48,7 +48,7 @@ namespace SledGX.Tools.AWS
         /// Writes multiple data records into an Amazon Kinesis Data Firehose delivery stream.
         /// </summary>
         /// <typeparam name="T">The generic type of the object.</typeparam>
-        /// <param name="data">The object you want to send.</param>
+        /// <param name="records">The list of objects you want to send.</param>
         /// <param name="encoder">The encoding of the content.</param>
         /// <param name="chunkSize">The quantity of records to be sent at the same time.</param>
         /// <returns>True if the operation is successful, false otherwise.</returns>
@@ -76,7 +76,7 @@ namespace SledGX.Tools.AWS
         /// Transforms the object into a data record in json format.
         /// </summary>
         /// <typeparam name="T">The generic type of the object.</typeparam>
-        /// <param name="data">The object you want to send.</param>
+        /// <param name="record">The object you want to send.</param>
         /// <param name="encoder">The encoding of the content.</param>
         /// <returns>The data record.</returns>
         private static Record BuildRecord<T>(T record, string encoder = "UTF-8")

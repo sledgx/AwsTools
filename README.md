@@ -34,7 +34,7 @@ Below is a list of the available methods:
 | PushObjects\<T\> | Sends multiple objects to an Amazon SNS topic. Objects are automatically transformed into json. |
 
 ### Queue Polling Service
-To initialize this service it's necessary to use the `QueuePollingService\<T\>` object by passing in the AWS credentials, the region where the service was created and the url of the SQS queue.
+To initialize this service it's necessary to use the `QueuePollingService<T>` object by passing in the AWS credentials, the region where the service was created and the url of the SQS queue.
 There are further settings that can be optionally defined:
 
 | Setting   | Description                                                            |
