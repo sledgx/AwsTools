@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>SledGX.Tools.AWS</AssemblyName>
     <Title>AWS Services Wrapper for .NET</Title>
-    <VersionPrefix>1.1.0</VersionPrefix>
+    <VersionPrefix>1.2.0</VersionPrefix>
     <Authors>SledGX</Authors>
     <Description>Simple .NET wrapper for AWS SNS, SQS, S3 and Kinesis services</Description>
     <Copyright>Copyright (c) 2022 SledGX</Copyright>
@@ -36,10 +36,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.KinesisFirehose" Version="3.7.100.7" />
-    <PackageReference Include="AWSSDK.S3" Version="3.7.101.7" />
-    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.7.100.7" />
-    <PackageReference Include="AWSSDK.SQS" Version="3.7.100.7" />
+    <PackageReference Include="AWSSDK.KinesisFirehose" Version="3.7.100.22" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.101.22" />
+    <PackageReference Include="AWSSDK.SimpleNotificationService" Version="3.7.100.22" />
+    <PackageReference Include="AWSSDK.SQS" Version="3.7.100.22" />
   </ItemGroup>
 
 </Project>
