@@ -58,18 +58,21 @@ namespace SledGX.Tools.AWS
         /// </summary>
         /// <param name="messages">The list of messages you want to send.</param>
         /// <param name="chunkSize">The quantity of messages to be sent at the same time.</param>
+        /// <param name="batchPrefix">The message id prefix used in batch operations.</param>
         /// <returns>True if the operation is successful, false otherwise.</returns>
-        public bool PushMessages(List<string> messages, int chunkSize = 500)
+        public bool PushMessages(List<string> messages, int chunkSize = 500, string batchPrefix = "batch")
         {
+            var index = 0;
             var result = new List<HttpStatusCode>();
             foreach (var chunk in messages.Chunk(chunkSize))
             {
                 var request = new PublishBatchRequest
                 {
                     TopicArn = topicArn,
-                    PublishBatchRequestEntries = messages
+                    PublishBatchRequestEntries = chunk
                         .Select(x => new PublishBatchRequestEntry
                         {
+                            Id = $"{batchPrefix}_{index++}",
                             Message = x
                         })
                         .ToList()
@@ -88,14 +91,15 @@ namespace SledGX.Tools.AWS
         /// <typeparam name="T">The generic type of the object.</typeparam>
         /// <param name="data">The list of objects you want to send.</param>
         /// <param name="chunkSize">The quantity of messages to be sent at the same time.</param>
+        /// <param name="batchPrefix">The message id prefix used in batch operations.</param>
         /// <returns>True if the operation is successful, false otherwise.</returns>
-        public bool PushObjects<T>(List<T> data, int chunkSize = 500)
+        public bool PushObjects<T>(List<T> data, int chunkSize = 500, string batchPrefix = "batch")
         {
             var messages = data
                 .Select(x => JsonSerializer.Serialize(x))
                 .ToList();
 
-            return PushMessages(messages, chunkSize);
+            return PushMessages(messages, chunkSize, batchPrefix);
         }
     }
 }
