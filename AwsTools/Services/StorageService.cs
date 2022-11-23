@@ -90,6 +90,43 @@ namespace SledGX.Tools.AWS
         }
 
         /// <summary>
+        /// Retrieve the list of objects inside the Amazon S3 bucket.
+        /// </summary>
+        /// <param name="prefixFilter">Limits the response to keys that begin with the specified prefix.</param>
+        /// <returns></returns>
+        public List<ObjectInfo> GetObjectList(string? prefixFilter = null)
+        {
+            var items = new List<ObjectInfo>();
+
+            ListObjectsResponse response;
+            do
+            {
+                var request = new ListObjectsRequest
+                {
+                    BucketName = bucketName,
+                    Prefix = prefixFilter
+                };
+                response = client.ListObjectsAsync(request).Result;
+
+                foreach (S3Object obj in response.S3Objects)
+                {
+                    items.Add(new ObjectInfo
+                    {
+                        Key = obj.Key,
+                        Size = obj.Size,
+                        LastModified = obj.LastModified,
+                        StorageClass = obj.StorageClass
+                    });
+                }
+
+                request.Marker = response.NextMarker;
+            }
+            while (response.IsTruncated);
+
+            return items;
+        }
+
+        /// <summary>
         /// Writes a text into an Amazon S3 bucket.
         /// </summary>
         /// <param name="key">The path to the object.</param>
@@ -262,5 +299,31 @@ namespace SledGX.Tools.AWS
             var response = client.DeleteObjectAsync(request).Result;
             return response.HttpStatusCode == HttpStatusCode.OK;
         }
+    }
+
+    /// <summary>
+    /// Storage Object Information.
+    /// </summary>
+    public class ObjectInfo
+    {
+        /// <summary>
+        /// Object key.
+        /// </summary>
+        public string? Key { get; set; }
+
+        /// <summary>
+        /// Object size in bytes.
+        /// </summary>
+        public long Size { get; set; }
+
+        /// <summary>
+        /// Object last modified date.
+        /// </summary>
+        public DateTime? LastModified { get; set; }
+
+        /// <summary>
+        /// Object storage class.
+        /// </summary>
+        public string? StorageClass { get; set; }
     }
 }
