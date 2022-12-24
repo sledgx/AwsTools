@@ -6,6 +6,7 @@ AWS Services Wrapper for .NET
 - [Queue](#queue-service): implementation of the Amazon Simple Queue Service (SQS) API.
 - [Storage](#storage-service): implementation of the Amazon Simple Storage Service (S3) API.
 - [Streamer](#streamer-service): implementation of the Amazon Kinesis Data Firehose API.
+- [Function](#function-service): implementation of the Amazon Lambda API.
 
 ## How to use
 Eeach service requires an AWS account to authenticate, so first you need to instantiate the `AwsCredentials` object to define the account details.
@@ -107,6 +108,7 @@ Below is a list of the available methods:
 | Method            | Description                                                                                   |
 |-------------------|-----------------------------------------------------------------------------------------------|
 | ObjectExists      | Checks if an object is present inside the Amazon S3 bucket.                                   |
+| GetObjectList     | Retrieve the list of objects inside the Amazon S3 bucket.                                     |
 | UploadText        | Writes a text into an Amazon S3 bucket.                                                       |
 | UploadObject\<T\> | Writes an object into an Amazon S3 bucket. The object is automatically transformed into json. |
 | UploadFile        | Writes a file to an Amazon S3 bucket.                                                         |
@@ -130,6 +132,22 @@ Below is a list of the available methods:
 |-----------------|------------------------------------------------------------------------------------|
 | PutRecord\<T\>  | Writes a single data record into an Amazon Kinesis Data Firehose delivery stream.  |
 | PutRecords\<T\> | Writes multiple data records into an Amazon Kinesis Data Firehose delivery stream. |
+
+### Function Service
+To initialize this service it's necessary to use the `FunctionService` object by passing in the AWS credentials, the region where the service was created and the name of Lambda function.
+
+Example.
+```csharp
+var setting = new FunctionService(credetials, "<region>", "<function name>");
+var service = new FunctionService(setting);
+```
+
+Below is a list of the available methods:
+
+| Method                                | Description                                                                        |
+|---------------------------------------|---------------------------------------------------|
+| Invoke\<T\>                           | Invoke a Lambda function.                         |
+| InvokeWithResponse\<TInput, TOutput\> | Invoke a Lambda function and wait for a response. |
 
 ## License
 Released under the [MIT License](https://github.com/sledgx/AwsTools/blob/master/LICENSE).
